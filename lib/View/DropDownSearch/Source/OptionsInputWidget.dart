@@ -2,8 +2,6 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Model/InputOptionObject.dart';
 import 'package:CenBase/Model/SelectorModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'OptionsInput.dart';
 
 class OptionsInputWidget<T> extends StatelessWidget {
@@ -18,7 +16,7 @@ class OptionsInputWidget<T> extends StatelessWidget {
   final InputDecoration? inputDecoration;
   final double maxHeight;
   final String hint;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
 
   const OptionsInputWidget({
     Key? key,

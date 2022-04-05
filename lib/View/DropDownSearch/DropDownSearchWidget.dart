@@ -3,7 +3,6 @@ import 'package:CenBase/Model/SelectorModel.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'Source/OptionsInputWidget.dart';
 
@@ -17,7 +16,7 @@ class DropDownSearchWidget<T> extends StatefulWidget {
   final bool enable;
   final double maxHeight;
   final String hint;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
   final TextEditingController textEditingController;
 
   const DropDownSearchWidget({
@@ -143,7 +142,7 @@ class _DropDownSearchWidget<T> extends State<DropDownSearchWidget> {
       }
     }
 
-    if (_selectedItem?.title?.isEmpty ?? true) {
+    if (_selectedItem?.title.isEmpty ?? true) {
       for (var obj in _items) {
         if (obj.title == widget.textEditingController.text) {
           _selectedItem = obj;

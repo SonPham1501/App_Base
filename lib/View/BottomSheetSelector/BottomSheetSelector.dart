@@ -8,25 +8,29 @@ import 'package:CenBase/Widget/InputSearchWidget.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import 'BottomSheetSelectorController.dart';
 
 // ignore: must_be_immutable
 class BottomSheetSelector extends StatelessWidget {
-  static show(BuildContext context, {
+  static show(
+    BuildContext context, {
     required String title,
     required List<SelectorModel> listSelector,
     bool isMultiSelect = false,
     Function(List<SelectorModel> list)? onSuccess,
   }) {
-    showBottomSheet(context: context, builder: (context) {
-      return BottomSheetSelector(
-        title: title,
-        list: SelectorModel.copyList(listSelector: listSelector),
-        isMultiSelect: isMultiSelect,
-        onSuccess: onSuccess,
-      );
-    });
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheetSelector(
+            title: title,
+            list: SelectorModel.copyList(listSelector: listSelector),
+            isMultiSelect: isMultiSelect,
+            onSuccess: onSuccess,
+          );
+        });
     // Get.bottomSheet(
     //   BottomSheetSelector(
     //     title: title,
@@ -54,103 +58,113 @@ class BottomSheetSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller = Get.put(BottomSheetSelectorController(isMultiSelect: isMultiSelect, list: list, onSuccess: onSuccess));
-    controller.context = context;
-    return Column(
-      children: [
-        InkWell(
-          onTap: Navigator.of(context).pop,
-          child: SafeArea(
-            child: Container(
-              height: 60,
-            ),
-            bottom: false,
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(16),
-                topLeft: Radius.circular(16),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BaseAppBarBottomSheetWidget(
-                  title: title,
+    return ChangeNotifierProvider(
+      create: (context) => BottomSheetSelectorController(
+        context,
+        isMultiSelect: isMultiSelect,
+        list: list,
+        onSuccess: onSuccess,
+      ),
+      child: Consumer<BottomSheetSelectorController>(
+        builder: (context, value, child) {
+          controller = Provider.of<BottomSheetSelectorController>(context);
+          return Column(
+            children: [
+              InkWell(
+                onTap: Navigator.of(context).pop,
+                child: SafeArea(
+                  child: Container(
+                    height: 60,
+                  ),
+                  bottom: false,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                  child: InputSearchWidget(
-                    hintText: "Tìm kiếm",
-                    controller: controller.textSearchController,
-                    onChanged: controller.onChangeTextSearch,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(16),
+                      topLeft: Radius.circular(16),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BaseAppBarBottomSheetWidget(
+                        title: title,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                        child: InputSearchWidget(
+                          hintText: "Tìm kiếm",
+                          controller: value.textSearchController,
+                          onChanged: controller.onChangeTextSearch,
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: value.listSelector.length,
+                          itemBuilder: (context, index) {
+                            return _childWidget(
+                                value, value.listSelector[index]);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Obx(
-                  () {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: controller.listSelector.length,
-                        itemBuilder: (context, index) {
-                          return _childWidget(controller.listSelector[index]);
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (isMultiSelect)...[
-          SafeArea(
-            bottom: false,
-            child: Container(
-              decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                BoxShadow(color: Colors.black.withOpacity(0.1), offset: Offset(0, 0), blurRadius: 4.0),
-              ], color: Colors.white),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ButtonWidget(
-                        title: "Bỏ chọn",
-                        buttonType: ButtonType.Cancel,
-                        onTap: () {
-                          controller.onResetValue();
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: ButtonWidget(
-                        title: "Áp dụng",
-                        onTap: () {
-                          controller.onSubmit();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          )
-        ]else ...[
-
-        ]
-
-      ],
+              if (isMultiSelect) ...[
+                SafeArea(
+                  bottom: false,
+                  child: Container(
+                    decoration: BoxDecoration(boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          offset: Offset(0, 0),
+                          blurRadius: 4.0),
+                    ], color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ButtonWidget(
+                              title: "Bỏ chọn",
+                              buttonType: ButtonType.Cancel,
+                              onTap: () {
+                                controller.onResetValue();
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: ButtonWidget(
+                              title: "Áp dụng",
+                              onTap: () {
+                                controller.onSubmit();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ] else
+                ...[]
+            ],
+          );
+        },
+      ),
     );
   }
 
-  Widget _childWidget(SelectorModel selectorModel) {
+  Widget _childWidget(
+      BottomSheetSelectorController value, SelectorModel selectorModel) {
     bool isCheck = selectorModel.isCheck;
-    if(controller.isMultiSelect){
+    if (value.isMultiSelect) {
       return InkWell(
         onTap: () {
           controller.onSelect(selectorModel);
@@ -167,12 +181,16 @@ class BottomSheetSelector extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: FontUtil.regular,
                         fontSize: 13,
-                        color: isCheck ? Constant.kColorOrangePrimary : Constant.kColorBlackPrimary,
+                        color: isCheck
+                            ? Constant.kColorOrangePrimary
+                            : Constant.kColorBlackPrimary,
                       ),
                     ),
                   ),
                   SvgPicture.asset(
-                    isCheck ? BaseResourceUtil.icon("ic_check_mark") : BaseResourceUtil.icon("ic_uncheck_mark"),
+                    isCheck
+                        ? BaseResourceUtil.icon("ic_check_mark")
+                        : BaseResourceUtil.icon("ic_uncheck_mark"),
                   )
                 ],
               ),
@@ -184,10 +202,9 @@ class BottomSheetSelector extends StatelessWidget {
           ],
         ),
       );
-    }else{
-      return  InkWell(
+    } else {
+      return InkWell(
         onTap: () {
-
           controller.onSelect(selectorModel);
         },
         child: Container(
@@ -198,19 +215,24 @@ class BottomSheetSelector extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(child: Text(
+                Expanded(
+                    child: Text(
                   selectorModel.title,
                   style: TextStyle(
                     fontFamily: FontUtil.regular,
                     fontSize: 14,
-                    color: isCheck ? Constant.kColorOrangePrimary : Constant.kColorBlackPrimary,
+                    color: isCheck
+                        ? Constant.kColorOrangePrimary
+                        : Constant.kColorBlackPrimary,
                   ),
                 )),
                 SizedBox(
                   width: 10,
                 ),
                 Icon(
-                  isCheck ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded,
+                  isCheck
+                      ? Icons.radio_button_checked_rounded
+                      : Icons.radio_button_unchecked_rounded,
                   color: Constant.kColorOrangePrimary,
                   size: 22,
                 ),
@@ -220,6 +242,5 @@ class BottomSheetSelector extends StatelessWidget {
         ),
       );
     }
-   
   }
 }

@@ -1,39 +1,28 @@
 import 'package:CenBase/Base/BaseController.dart';
-import 'package:CenBase/CenBase.dart';
-import 'package:CenBase/Model/GroupSelectorModel.dart';
 import 'package:CenBase/Model/SelectorModel.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 
 class BottomSheetSelectorController extends BaseController {
 //region -------- VALUES --------
   final bool isMultiSelect;
   final Function(List<SelectorModel> list)? onSuccess;
   final List<SelectorModel> list;
-  var listSelector = <SelectorModel>[].obs;
+  var listSelector = <SelectorModel>[];
   var textSearchController = TextEditingController();
-  BuildContext? context;
+  BuildContext context;
 
-  BottomSheetSelectorController({required this.isMultiSelect, this.onSuccess, required this.list});
-
-//endregion
-
-//region -------- INIT --------
-  @override
-  void init() {
-    super.init();
+  BottomSheetSelectorController(this.context,
+      {required this.isMultiSelect, this.onSuccess, required this.list}) {
     print("Fucl");
-    viewState.value = ViewState.Loading;
+    viewState = ViewState.Loading;
     for (var item in list) {
       listSelector.add(item);
     }
+    notifyListeners();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+//endregion
 
 //endregion
 
@@ -45,34 +34,31 @@ class BottomSheetSelectorController extends BaseController {
 
   void onSelect(SelectorModel selectorModel) {
     if (isMultiSelect) {
-      if (context != null) {
-        onHideKeyboard(context!);
-      }
+      onHideKeyboard(context);
       selectorModel.isCheck = !selectorModel.isCheck;
-      listSelector.refresh();
+      // listSelector.refesh();
     } else {
       listSelector.forEach((element) {
         element.isCheck = false;
       });
       selectorModel.isCheck = !selectorModel.isCheck;
-      if (context != null) {
-        onHideKeyboard(context!);
-      }
+      onHideKeyboard(context);
       onSuccess?.call(list);
-      Get.back();
+      Navigator.of(context).pop();
     }
+    notifyListeners();
   }
 
   void onResetValue() {
     for (var item in listSelector) {
       item.isCheck = false;
     }
-    listSelector.refresh();
+    notifyListeners();
   }
 
   void onSubmit() {
     onSuccess?.call(listSelector);
-    Get.back();
+    Navigator.of(context).pop();
   }
 
 //endregion
@@ -92,7 +78,8 @@ class BottomSheetSelectorController extends BaseController {
         }
       }
     }
-    listSelector.refresh();
+    // listSelector.refresh();
+    notifyListeners();
   }
 //endregion
 

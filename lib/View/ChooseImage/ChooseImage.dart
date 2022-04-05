@@ -169,15 +169,15 @@ class ChooseImage {
         await new Future.delayed(const Duration(milliseconds: 100));
         onHideLoading?.call();
 
-        Get.to(
-          () => PhotoPickerAndCropPage(
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => PhotoPickerAndCropPage(
             file: File(xFile!.path),
             onCropImage: (imageFileCrop) {
               onChooseImage?.call(imageFileCrop);
               onChooseMultiImage?.call([imageFileCrop]);
             },
           ),
-        );
+        ));
       } else {
         await new Future.delayed(const Duration(milliseconds: 100));
         onHideLoading?.call();
@@ -222,15 +222,15 @@ class ChooseImage {
         await new Future.delayed(const Duration(milliseconds: 100));
         onHideLoading?.call();
 
-        Get.to(
-          () => PhotoPickerAndCropPage(
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => PhotoPickerAndCropPage(
             file: File(xFile!.path),
             onCropImage: (imageFileCrop) {
               onChooseImage?.call(imageFileCrop);
               onChooseMultiImage?.call([imageFileCrop]);
             },
           ),
-        );
+        ));
       } else {
         await new Future.delayed(const Duration(milliseconds: 100));
         onHideLoading?.call();

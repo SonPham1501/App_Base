@@ -3,10 +3,7 @@ import 'dart:math';
 
 import 'package:CenBase/Model/InputOptionObject.dart';
 import 'package:CenBase/Widget/InputInfoWidget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import 'SuggestionsBoxController.dart';
 
@@ -32,7 +29,7 @@ class OptionsInput<T> extends StatefulWidget {
   final Color backgroundColor;
   final bool enabled;
   final String? hintText;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
 
   const OptionsInput({
     Key? key,
@@ -75,7 +72,7 @@ class _OptionsInputState<T> extends State<OptionsInput<T>> {
     _suggestionsBoxController = SuggestionsBoxController(context);
     _focusNode = widget.focusNode;
     _focusNode.addListener(_handleFocusChanged);
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _initOverlayEntry();
     });
   }
@@ -85,7 +82,7 @@ class _OptionsInputState<T> extends State<OptionsInput<T>> {
   Widget build(BuildContext context) {
     return NotificationListener<SizeChangedLayoutNotification>(
       onNotification: (SizeChangedLayoutNotification val) {
-        WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
           _suggestionsBoxController.overlayEntry?.markNeedsBuild();
         });
         return true;
@@ -163,7 +160,7 @@ class _OptionsInputState<T> extends State<OptionsInput<T>> {
                     ),
                     child: Scrollbar(
                       controller: _scrollController,
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       child: ListView.builder(
                         controller: _scrollController,
                         shrinkWrap: true,
