@@ -1,5 +1,9 @@
+import 'package:CenBase/Base/BaseController.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import 'Base/BaseSliverListController.dart';
+import 'Page/BaseWebView/BaseWebViewController.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,12 +13,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => BaseController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BaseSliverListController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BaseWebViewController(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -41,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    context.isTablet;
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below

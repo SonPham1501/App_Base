@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'BaseController.dart';
@@ -7,20 +6,22 @@ import 'BaseController.dart';
 class BaseSliverListController extends BaseController {
   var refreshController = RefreshController(initialRefresh: false);
   var scrollController = ScrollController();
-  Rx<bool> isLoadMore = false.obs;
+  bool isLoadMore = false;
   bool isLoad = false; //đang load api không load thêm
   bool isEnd = false; //đã hết bản ghi
   int page = 1; //trang
-  var countFilter = 0.obs; //số lượng filter
-  var countRecord = 0.obs; //số lượng bản ghi
+  var countFilter = 0; //số lượng filter
+  var countRecord = 0; //số lượng bản ghi
 
-  @override
-  void onInit() {
-    init();
-    super.onInit();
+  void setIsLoadMore(bool isLoadMore) {
+    this.isLoadMore = isLoadMore;
+    notifyListeners();
   }
 
-  void init() {}
+  void setCountRecord(var countRecord) {
+    this.countRecord = countRecord;
+    notifyListeners();
+  }
 
   void clearData() {
     isLoad = false;
@@ -30,16 +31,17 @@ class BaseSliverListController extends BaseController {
 
   void checkData({required List listShow, required List listDataApi, int? totalRecord}) {
     if (totalRecord != null) {
-      countRecord.value = totalRecord;
+      countRecord = totalRecord;
     }
     if (listShow.isEmpty) {
-      viewState(ViewState.DataNull);
+      viewState = ViewState.DataNull;
     } else {
-      viewState.value = ViewState.Loaded;
+      viewState = ViewState.Loaded;
     }
     if (listDataApi.length == 0 || totalRecord == listShow.length) {
       isEnd = true;
-      isLoadMore(false);
+      isLoadMore = false;
     }
+    notifyListeners();
   }
 }

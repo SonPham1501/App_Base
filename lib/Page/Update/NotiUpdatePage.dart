@@ -4,14 +4,12 @@ import 'package:CenBase/Page/Update/NotiUpdateController.dart';
 import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
+import 'package:CenBase/View/ChooseImage/ChooseImage.dart';
 import 'package:CenBase/Widget/ButtonWidget.dart';
-import 'package:CenBase/Widget/CheckboxWidget.dart';
-import 'package:FlutterBase/Utils/DateTimeUtil.dart';
 import 'package:FlutterBase/Utils/Util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class NotiUpdatePage extends StatelessWidget {
   late NotiUpdateController _notiUpdateController;
@@ -27,7 +25,10 @@ class NotiUpdatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _notiUpdateController = Get.put(NotiUpdateController());
+    _notiUpdateController = Provider.of<NotiUpdateController>(
+      context,
+      listen: false,
+    );
     return WillPopScope(
       onWillPop: () async {
         if (isForceUpdate) {
@@ -58,9 +59,7 @@ class NotiUpdatePage extends StatelessWidget {
                               BaseResourceUtil.icon("ic_arrow_left.svg"),
                               color: Constant.kColorOrangePrimary,
                             ),
-                            onPressed: () {
-                              Get.back();
-                            },
+                            onPressed: Navigator.of(context).pop,
                           )
                         : SizedBox(),
                   ),
@@ -126,7 +125,9 @@ class NotiUpdatePage extends StatelessWidget {
                   ),
                 ),
               Expanded(child: SizedBox()),
-              Obx(() => Padding(
+              Consumer<NotiUpdateController>(
+                builder: (context, value, child) {
+                  return Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,22 +135,29 @@ class NotiUpdatePage extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(bottom: 15),
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                           child: ButtonWidget(
                             onTap: () {
-                              if (GetPlatform.isAndroid) {
-                                Util.openURL("https://play.google.com/store/apps/details?id=" + packageName);
+                              if (Platform.isAndroid) {
+                                Util.openURL(
+                                    "https://play.google.com/store/apps/details?id=" +
+                                        packageName);
                               } else {
                                 Util.openURL(CenBase.urlAppStore);
                               }
                             },
-                            buttonType: _notiUpdateController.isAgree.isTrue ? ButtonType.Normal : ButtonType.DisableDarkBackground,
+                            buttonType: value.isAgree
+                                ? ButtonType.Normal
+                                : ButtonType.DisableDarkBackground,
                             title: "Cập nhật ngay",
                           ),
                         ),
                       ],
                     ),
-                  ))
+                  );
+                },
+              )
             ],
           ),
         ),

@@ -1,42 +1,41 @@
-import 'package:CenBase/Base/BaseController.dart';
 import 'package:CenBase/Common/Constant.dart';
-import 'package:CenBase/Model/GroupSelectorModel.dart';
 import 'package:CenBase/Model/SelectorModel.dart';
 import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:CenBase/Widget/BaseAppBarBottomSheetWidget.dart';
-import 'package:CenBase/Widget/BaseAppBarWidget.dart';
 import 'package:CenBase/Widget/ButtonWidget.dart';
-import 'package:CenBase/Widget/CheckboxWidget.dart';
 import 'package:CenBase/Widget/InputSearchWidget.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
-import 'package:CenBase/Widget/LoadingWidget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'BottomSheetSelectorController.dart';
 
 // ignore: must_be_immutable
 class BottomSheetSelector extends StatelessWidget {
-  static show({
+  static show(BuildContext context, {
     required String title,
     required List<SelectorModel> listSelector,
     bool isMultiSelect = false,
     Function(List<SelectorModel> list)? onSuccess,
   }) {
-    Get.bottomSheet(
-      BottomSheetSelector(
+    showBottomSheet(context: context, builder: (context) {
+      return BottomSheetSelector(
         title: title,
         list: SelectorModel.copyList(listSelector: listSelector),
         isMultiSelect: isMultiSelect,
         onSuccess: onSuccess,
-      ),
-      isScrollControlled: true,
-    );
+      );
+    });
+    // Get.bottomSheet(
+    //   BottomSheetSelector(
+    //     title: title,
+    //     list: SelectorModel.copyList(listSelector: listSelector),
+    //     isMultiSelect: isMultiSelect,
+    //     onSuccess: onSuccess,
+    //   ),
+    //   isScrollControlled: true,
+    // );
   }
 
   late BottomSheetSelectorController controller;
@@ -60,9 +59,7 @@ class BottomSheetSelector extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () {
-            Get.back();
-          },
+          onTap: Navigator.of(context).pop,
           child: SafeArea(
             child: Container(
               height: 60,

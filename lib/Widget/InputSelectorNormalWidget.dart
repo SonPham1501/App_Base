@@ -2,7 +2,6 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Model/InputOptionObject.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class InputSelectorNormalWidget extends StatelessWidget {
   final String? hintText;
@@ -13,7 +12,7 @@ class InputSelectorNormalWidget extends StatelessWidget {
   final bool showDropDown;
   final double height;
   final bool isHaveSmallClose;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
 
   const InputSelectorNormalWidget({
     Key? key,
@@ -71,7 +70,7 @@ class InputSelectorNormalWidget extends StatelessWidget {
             ),
           ),
           StreamBuilder<InputOptionObject?>(
-            stream: inputOptionObject?.stream,
+            stream: inputOptionObject,
             builder: (context, snapshot) {
               if (snapshot.data != null && snapshot.data!.isError) {
                 return Padding(

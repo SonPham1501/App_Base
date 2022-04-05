@@ -6,10 +6,8 @@ import 'package:FlutterBase/Utils/DeBouncerDuration.dart';
 import 'package:FlutterBase/Utils/TextFormatUtil.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import '../Common/Constant.dart';
 
 class InputSearchWidget extends StatefulWidget {
@@ -20,7 +18,7 @@ class InputSearchWidget extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onChangedDeBouncer;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
@@ -120,7 +118,7 @@ class _InputInfoWidgetState extends State<InputSearchWidget> {
 
   Widget _buildTextEdit() {
     return StreamBuilder<InputOptionObject?>(
-      stream: widget.inputOptionObject?.stream,
+      stream: widget.inputOptionObject,
       builder: (context, snapshot) {
         return _buildBody(snapshot.data);
       },

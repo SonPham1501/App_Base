@@ -2,14 +2,13 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Model/InputOptionObject.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class InputSelectorWidget extends StatelessWidget {
   final String? title;
   final String? content;
   final Function()? onTap;
   final bool enable;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
 
   const InputSelectorWidget({
     Key? key,
@@ -24,7 +23,7 @@ class InputSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (content == null || content!.isEmpty) {
       return StreamBuilder<InputOptionObject?>(
-        stream: inputOptionObject?.stream,
+        stream: inputOptionObject,
         builder: (context, snapshot) {
           var isShowError;
           var message;

@@ -4,9 +4,9 @@ import 'package:CenBase/Model/UpdateModel.dart';
 import 'package:CenBase/Page/Update/NotiUpdatePage.dart';
 import 'package:CenBase/Page/Update/Widget/DialogNoticeWidget.dart';
 import 'package:CenBase/Service/ApiService.dart';
-import 'package:FlutterBase/Utils/PreferUtil.dart';
+import 'package:CenBase/View/ChooseImage/ChooseImage.dart';
 import 'package:FlutterBase/Utils/Util.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
 class UpdateHelper {
@@ -14,15 +14,18 @@ class UpdateHelper {
   static String packageName = "";
   static UpdateItemModel? latestUpdateItem;
 
-  static void checkVersion() async {
+  static void checkVersion(BuildContext context) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     versionApp = packageInfo.version;
     String packName = packageInfo.packageName;
     packageName = packName;
-    getListUpdate(packName);
+    getListUpdate(context, packName);
   }
 
-  static void getListUpdate(String packName) async {
+  static void getListUpdate(
+    BuildContext context,
+    String packName,
+  ) async {
     var listVersion = await PreferUtil.getString(Constant.kListUpdated);
 
     var response = await ApiService.getListUpdate();
@@ -52,13 +55,12 @@ class UpdateHelper {
       }
 
       if (isForceUpdate) {
-        Get.to(
-          () => NotiUpdatePage(
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotiUpdatePage(
             packageName: packName,
             updateItemModel: _updateItemModel!,
             isForceUpdate: true,
           ),
-        );
+        ));
         return;
       }
 
@@ -83,27 +85,31 @@ class UpdateHelper {
         print('ver app' + versionApp);
         listVersion += ("$latestItemDialog ");
         PreferUtil.setString(Constant.kListUpdated, listVersion);
-        Get.dialog(
-            DialogNoticeWidget(
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return DialogNoticeWidget(
               updateItemModel: listUpdate[latestItemDialogIndex],
               onTapUpdate: () {
-                Get.back();
-                if (GetPlatform.isAndroid) {
+                Navigator.of(context).pop();
+                if (Platform.isAndroid) {
                   Util.openURL("https://play.google.com/store/apps/details?id=" + packName);
                 } else {
                   Util.openURL(CenBase.urlAppStore);
                 }
               },
               onTapSeeMore: () {
-                Get.to(
-                    () => NotiUpdatePage(
-                          packageName: packName,
-                          updateItemModel: listUpdate[latestItemDialogIndex],
-                        ),
-                    preventDuplicates: false);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => NotiUpdatePage(
+                    packageName: packName,
+                    updateItemModel: listUpdate[latestItemDialogIndex],
+                  ),
+                ));
               },
-            ),
-            barrierDismissible: true);
+            );
+          },
+        );
       }
     }
   }

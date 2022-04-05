@@ -1,12 +1,11 @@
-import 'dart:io';
 
 import 'package:CenBase/Helper/TrackingHelper.dart';
 import 'package:CenBase/Model/UserModel.dart';
 import 'package:CenBase/Service/ApiService.dart';
+import 'package:CenBase/View/ChooseImage/ChooseImage.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:get/get.dart';
 import 'package:package_info/package_info.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -129,7 +128,7 @@ class CenBase {
     if (buildType == CenBuildType.staging) {
       build = "staging";
     }
-    if (GetPlatform.isAndroid) {
+    if (Platform.isAndroid) {
       platform = "android";
     }
     var id = "$packageName.$platform.$build";

@@ -3,13 +3,13 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class SliverListMessageWidget extends StatelessWidget {
   final String? title;
   final ViewState viewState;
+  final Size? size;
 
-  const SliverListMessageWidget({Key? key, this.title, this.viewState = ViewState.None}) : super(key: key);
+  const SliverListMessageWidget({Key? key, this.title, this.viewState = ViewState.None, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,8 @@ class SliverListMessageWidget extends StatelessWidget {
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Image.asset(
               BaseResourceUtil.icon("bg_error.png"),
-              width: Get.width * 0.7,
-              height: Get.height * 0.4,
+              width: (size?.width ?? 0) * 0.7,
+              height: (size?.height ?? 0) * 0.4,
             ),
           )
         ],

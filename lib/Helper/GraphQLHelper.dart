@@ -1,5 +1,4 @@
 import 'package:CenBase/CenBase.dart';
-import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Common/Enum.dart';
 import 'package:CenBase/Helper/LogHelper.dart';
 import 'package:CenBase/Helper/SqfLiteHelper.dart';
@@ -7,7 +6,6 @@ import 'package:CenBase/Utils/BaseProjectUtil.dart';
 import 'package:CenBase/Utils/DialogUtil.dart';
 import 'package:FlutterBase/Utils/DateTimeUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'TokenHelper.dart';
@@ -80,7 +78,8 @@ class GraphQLHelper {
     return response;
   }
 
-  static Future<QueryResult> fetchData({
+  static Future<QueryResult> fetchData(
+    BuildContext context,{
     required String link,
     GraphQlMethod method = GraphQlMethod.Queries,
     Map<String, dynamic>? variables,
@@ -168,6 +167,7 @@ class GraphQLHelper {
         if (isGetAccessTokenSuccess) {
           if (countRequest < 2) {
             var data = await fetchData(
+                context,
                 link: link,
                 method: method,
                 variables: variables,
@@ -183,13 +183,13 @@ class GraphQLHelper {
           if (CenBase.accessToken != null) {
             CenBase.logout?.call();
           }
-          if (isLoading) Get.back();
+          if (isLoading) Navigator.of(context).pop();
           return result;
         }
       }
     }
 
-    if (isLoading && countRequest == 1) Get.back();
+    if (isLoading && countRequest == 1) Navigator.of(context).pop();
 
     return result;
   }

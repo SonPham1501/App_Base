@@ -4,7 +4,6 @@ import 'package:CenBase/Widget/ButtonWidget.dart';
 import 'package:CenBase/Widget/LoadingWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
 
 class DialogUtil {
   static void showLoading() {
@@ -41,8 +40,9 @@ class DialogUtil {
     EasyLoading.dismiss();
   }
 
-  static showErrorDialog({String? error}) {
-    Get.dialog(AlertDialog(
+  static showErrorDialog(BuildContext context, {String? error}) {
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
         title: Text("Lỗi"),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,50 +58,50 @@ class DialogUtil {
               child: ButtonWidget(
                 height: 35,
                 buttonType: ButtonType.Normal,
-                onTap: () {
-                  Get.back();
-                },
+                onTap: Navigator.of(context).pop,
                 title: "Thoát",
               ),
             ),
           ],
-        )));
+        ));
+    });
   }
 
-  static showCompleteDialog({String? content, String title = "Thông báo"}) {
-    Get.dialog(
-      AlertDialog(
-        title: Text(title),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("${content.toString()}"),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              width: double.infinity,
-              child: ButtonWidget(
-                height: 35,
-                buttonType: ButtonType.Normal,
-                onTap: () {
-                  Get.back();
-                },
-                title: "Thoát",
+  static showCompleteDialog(BuildContext context, {String? content, String title = "Thông báo"}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("${content.toString()}"),
+              SizedBox(
+                height: 15,
               ),
-            ),
-          ],
-        ),
-      ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                width: double.infinity,
+                child: ButtonWidget(
+                  height: 35,
+                  buttonType: ButtonType.Normal,
+                  onTap: Navigator.of(context).pop,
+                  title: "Thoát",
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  static showInfo({String? content}) {
-    Get.dialog(
-      Dialog(
+  static showInfo(BuildContext context, {String? content}) {
+    showDialog(context: context, builder: (context) {
+      return Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
         child: Container(
@@ -133,9 +133,7 @@ class DialogUtil {
                   child: ButtonWidget(
                     height: 44,
                     buttonType: ButtonType.Normal,
-                    onTap: () {
-                      Get.back();
-                    },
+                    onTap: Navigator.of(context).pop,
                     title: "Đóng",
                   ),
                 ),
@@ -143,86 +141,91 @@ class DialogUtil {
             ],
           ),
         ),
-      ),
-    );
+      );
+    },);
   }
 
-  static showCompleteDialogQuestion({String? content,
-    String title = "Thông báo",
-    String titleCancel = "Đóng",
-    String titleAction = "OK",
-    Function? onButtonCancel,
-    Function? onButtonAction}) {
-    Get.dialog(
-      Dialog(
-        insetPadding: EdgeInsets.zero,
-        backgroundColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-          padding: EdgeInsets.all(20),
-          width: 335,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 4,
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  fontFamily: FontUtil.medium,
-                  fontSize: 18,
-                  color: Constant.kColorBlackPrimary,
+  static showCompleteDialogQuestion(BuildContext context,
+      {String? content,
+      String title = "Thông báo",
+      String titleCancel = "Đóng",
+      String titleAction = "OK",
+      Function? onButtonCancel,
+      Function? onButtonAction}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            padding: EdgeInsets.all(20),
+            width: 335,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 4,
                 ),
-              ),
-              if (content != null && content.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
-                  child: Text(
-                    "${content.toString()}",
-                    style: TextStyle(
-                      fontFamily: FontUtil.regular,
-                      fontSize: 16,
-                      color: Constant.kColorBlackPrimary,
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: FontUtil.medium,
+                    fontSize: 18,
+                    color: Constant.kColorBlackPrimary,
+                  ),
+                ),
+                if (content != null && content.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
+                    child: Text(
+                      "${content.toString()}",
+                      style: TextStyle(
+                        fontFamily: FontUtil.regular,
+                        fontSize: 16,
+                        color: Constant.kColorBlackPrimary,
+                      ),
                     ),
-                  ),
-                )
-              else
-                SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ButtonWidget(
-                      height: 44,
-                      buttonType: ButtonType.Cancel,
-                      onTap: () {
-                        Get.back();
-                        onButtonCancel?.call();
-                      },
-                      title: titleCancel,
+                  )
+                else
+                  SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ButtonWidget(
+                        height: 44,
+                        buttonType: ButtonType.Cancel,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          onButtonCancel?.call();
+                        },
+                        title: titleCancel,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    child: ButtonWidget(
-                      height: 44,
-                      buttonType: ButtonType.Normal,
-                      onTap: () {
-                        Get.back();
-                        onButtonAction?.call();
-                      },
-                      title: titleAction,
+                    SizedBox(
+                      width: 8,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Expanded(
+                      child: ButtonWidget(
+                        height: 44,
+                        buttonType: ButtonType.Normal,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          onButtonAction?.call();
+                        },
+                        title: titleAction,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -250,14 +253,14 @@ class DialogUtil {
         });
   }
 
-  static showConfirmDialog({String? content,
+  static showConfirmDialog(BuildContext context, {String? content,
     String title = "Bạn có chắc không?",
     String titleCancel = "Đóng",
     String titleAction = "OK",
     Function? onButtonCancel,
     Function? onButtonAction}) {
-    Get.dialog(
-      Dialog(
+    showDialog(context: context, builder: (context) {
+      return Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
         child: Container(
@@ -301,7 +304,7 @@ class DialogUtil {
               ),
               InkWell(
                 onTap: () {
-                  Get.back();
+                  Navigator.of(context).pop();
                   onButtonCancel?.call();
                 },
                 child: Container(
@@ -319,7 +322,7 @@ class DialogUtil {
               ),
               InkWell(
                 onTap: () {
-                  Get.back();
+                  Navigator.of(context).pop();
                   onButtonAction?.call();
                 },
                 child: Container(
@@ -331,7 +334,7 @@ class DialogUtil {
             ],
           ),
         ),
-      ),
-    );
+      );
+    },);
   }
 }

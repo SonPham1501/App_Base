@@ -2,9 +2,7 @@ import 'package:CenBase/Model/UpdateModel.dart';
 import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
-import 'package:FlutterBase/Utils/DateTimeUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DialogNoticeWidget extends StatelessWidget {
   Function()? onTapUpdate;
@@ -85,9 +83,7 @@ class DialogNoticeWidget extends StatelessWidget {
             Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
+                onTap: Navigator.of(context).pop,
                 child: Padding(
                   padding: EdgeInsets.only(top: 15, bottom: 15),
                   child: SizedBox(

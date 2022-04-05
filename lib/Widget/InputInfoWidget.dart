@@ -6,12 +6,9 @@ import 'package:FlutterBase/Utils/DeBouncerDuration.dart';
 import 'package:FlutterBase/Utils/TextFormatUtil.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 class InputInfoWidget extends StatefulWidget {
   final TextEditingController? controller;
@@ -21,7 +18,7 @@ class InputInfoWidget extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onChangedDeBouncer;
-  final Rx<InputOptionObject>? inputOptionObject;
+  final Stream<InputOptionObject>? inputOptionObject;
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
@@ -144,7 +141,7 @@ class _InputInfoWidgetState extends State<InputInfoWidget>
 
   Widget _buildTextEdit() {
     return StreamBuilder<InputOptionObject?>(
-      stream: widget.inputOptionObject?.stream,
+      stream: widget.inputOptionObject,
       builder: (context, snapshot) {
         return _buildBody(snapshot.data);
       },

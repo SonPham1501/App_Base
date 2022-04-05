@@ -3,12 +3,11 @@ import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 import '../InputSearchWidget.dart';
 
 class SliverBoxSearchWidget extends StatelessWidget {
-  final RxInt? countFilter;
+  final int? countFilter;
   final Function? onFilter;
   final Function? onSort;
   final String hintText;
@@ -88,24 +87,25 @@ class SliverBoxSearchWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 10, 4),
               child: countFilter != null
-                  ? Obx(
-                      () => Badge(
-                        position: BadgePosition(
-                          end: -5,
-                          top: 12,
-                        ),
-                        showBadge: (countFilter != null && countFilter!.value > 0),
-                        badgeContent: Text(
-                          countFilter!.value.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 7, fontWeight: FontWeight.w500),
-                        ),
-                        padding: const EdgeInsets.all(3),
-                        child: SvgPicture.asset(
-                          BaseResourceUtil.icon("ic_filter.svg"),
-                          color: Color(0xFF5E5873),
-                          height: 22,
-                          width: 22,
-                        ),
+                  ? Badge(
+                      position: BadgePosition(
+                        end: -5,
+                        top: 12,
+                      ),
+                      showBadge: (countFilter != null && countFilter! > 0),
+                      badgeContent: Text(
+                        countFilter!.toString(),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 7,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      padding: const EdgeInsets.all(3),
+                      child: SvgPicture.asset(
+                        BaseResourceUtil.icon("ic_filter.svg"),
+                        color: Color(0xFF5E5873),
+                        height: 22,
+                        width: 22,
                       ),
                     )
                   : Padding(

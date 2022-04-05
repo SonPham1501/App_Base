@@ -5,10 +5,8 @@ import 'package:CenBase/Widget/BaseAppBarWidget.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
 import 'package:CenBase/Widget/LoadingWidget.dart';
 import 'package:FlutterBase/Utils/Util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'BaseWebViewController.dart';
@@ -27,7 +25,10 @@ class BaseWebViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("PaymentMethodPage");
-    controller = Get.put(BaseWebViewController(onSuccess: onSuccess));
+    controller = Provider.of<BaseWebViewController>(
+      context,
+      listen: false,
+    );
     return Scaffold(
       backgroundColor: Constant.white,
       resizeToAvoidBottomInset: true,
@@ -70,34 +71,40 @@ class BaseWebViewPage extends StatelessWidget {
               ],
             ),
             LineBaseWidget(),
-            Expanded(
-              child: Stack(
-                children: [
-                  ClipRect(
-                    child: WebView(
-                      javascriptMode: JavascriptMode.unrestricted,
-                      initialUrl: this.url,
-                      onPageFinished: (value) {
-                        controller.onHideKeyboard(context);
-                        controller.viewState.value = ViewState.Loaded;
-                      },
-                      onProgress: (value) {
-                        controller.viewState.value = ViewState.Loading;
-                      },
-                    ),
-                  ),
-                  Obx(() {
-                    if (controller.viewState.value == ViewState.Loading) {
-                      return Positioned(
-                        child: Center(
-                          child: LoadingWidget(),
+            Consumer<BaseWebViewController>(
+              builder: (context, value, child) {
+                return Expanded(
+                  child: Stack(
+                    children: [
+                      ClipRect(
+                        child: WebView(
+                          javascriptMode: JavascriptMode.unrestricted,
+                          initialUrl: this.url,
+                          onPageFinished: (value) {
+                            controller.onHideKeyboard(context);
+                            controller.setViewState(
+                              ViewState.Loaded,
+                            );
+                          },
+                          onProgress: (value) {
+                            controller.setViewState(
+                              ViewState.Loading,
+                            );
+                          },
                         ),
-                      );
-                    }
-                    return SizedBox();
-                  })
-                ],
-              ),
+                      ),
+                      if (value.viewState == ViewState.Loading)
+                        Positioned(
+                          child: Center(
+                            child: LoadingWidget(),
+                          ),
+                        )
+                      else
+                        SizedBox()
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

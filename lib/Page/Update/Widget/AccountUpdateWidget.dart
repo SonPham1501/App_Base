@@ -1,15 +1,11 @@
-import 'package:CenBase/CenBase.dart';
 import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Helper/UpdateHelper.dart';
 import 'package:CenBase/Model/UpdateModel.dart';
 import 'package:CenBase/Page/Update/NotiUpdatePage.dart';
-import 'package:CenBase/Utils/BaseProjectUtil.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 class AccountUpdateWidget extends StatefulWidget {
   const AccountUpdateWidget({Key? key}) : super(key: key);
 
@@ -57,7 +53,12 @@ class _AccountUpdateWidgetState extends State<AccountUpdateWidget> {
     return InkWell(
       onTap: () {
         if (_updateItemModel != null) {
-          Get.to(NotiUpdatePage(updateItemModel: _updateItemModel!, packageName: packageName!), preventDuplicates: false);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NotiUpdatePage(
+              updateItemModel: _updateItemModel!,
+              packageName: packageName!,
+            ),
+          ));
         } else {
           Util.showToast("Ứng dụng không có phiên bản mới");
         }

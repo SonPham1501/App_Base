@@ -1,15 +1,24 @@
 import 'package:CenBase/Utils/DialogUtil.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 enum ViewState { Init, Loading, Loaded, Complete, Error, None, DataNull }
 
-abstract class BaseController extends GetxController {
-  Rx<ViewState> viewState = ViewState.Init.obs;
+class BaseController extends ChangeNotifier {
+  ViewState viewState = ViewState.Init;
 
-  RxString errorMessage = "".obs;
+  String errorMessage = "";
 
   bool _isLoading = false;
+
+  void setViewState(ViewState viewState) {
+    this.viewState = viewState;
+    notifyListeners();
+  }
+
+  void setErrorLoading(String errMessage) {
+    errorMessage = errMessage;
+    notifyListeners();
+  }
 
   bool get isLoading {
     return _isLoading;
@@ -22,20 +31,7 @@ abstract class BaseController extends GetxController {
     } else {
       DialogUtil.hideLoading();
     }
-  }
-
-
-  @override
-  void onInit() {
-    init();
-    super.onInit();
-  }
-
-  void init() {}
-
-  @override
-  void onClose() {
-    super.onClose();
+    notifyListeners();
   }
 
   void onHideKeyboard(BuildContext context) {

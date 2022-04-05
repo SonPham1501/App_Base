@@ -3,8 +3,8 @@ import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class BaseAppBarWidget extends AppBar {
   final String? textTitle;
   Function()? onback;
@@ -40,10 +40,10 @@ class BaseAppBarWidget extends AppBar {
                     ),
                   ),
                   onPressed: () {
-                    if (onback == null) {
-                      Get.back();
+                    if (onback == null && context != null) {
+                      Navigator.of(context).pop();
                     } else {
-                      onback.call();
+                      onback!.call();
                     }
                   },
                 )

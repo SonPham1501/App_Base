@@ -4,10 +4,9 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Widget/SliverWidget/SliverListLoadingWidget.dart';
 import 'package:CenBase/Widget/SliverWidget/SliverListTotalRecord.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'SliverListErrorWidget.dart';
 import 'SliverListLoadMoreWidget.dart';
 import 'SliverListMessageWidget.dart';
 
@@ -36,14 +35,13 @@ class BaseSliverListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //var controller = Get.find<BaseSliverListController>(tag: tag);
-    return Obx(
-      () {
-        return NotificationListener<ScrollNotification>(
+    return Consumer<BaseSliverListController>(builder: (context, value, child) {
+      return NotificationListener<ScrollNotification>(
           onNotification: (notification) {
-            if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+            if (notification.metrics.pixels ==
+                notification.metrics.maxScrollExtent) {
               print("--onLoadMore");
               onLoadMore?.call();
-
             }
             return true;
           },
@@ -59,26 +57,31 @@ class BaseSliverListWidget extends StatelessWidget {
               controller: controller.scrollController,
               slivers: [
                 if (childHeader != null) childHeader!,
-                if (controller.viewState.value == ViewState.Loading) ...[
+                if (value.viewState == ViewState.Loading) ...[
                   SliverListLoadingWidget(),
                 ],
-                if (controller.viewState.value == ViewState.Loaded || controller.viewState.value == ViewState.Complete) ...[
+                if (value.viewState == ViewState.Loaded ||
+                    value.viewState == ViewState.Complete) ...[
                   if (isShowTotalRecord)
-                    Obx(() => SliverListTotalRecord(
-                          total: controller.countRecord.value,
+                    Consumer<BaseSliverListController>(
+                      builder: (context, value, child) {
+                        return SliverListTotalRecord(
+                          total: value.countRecord,
                           contentName: contentTotalRecord,
-                        )),
+                        );
+                      },
+                    ),
                   if (childList != null) childList!,
                   SliverListLoadMoreWidget(
                     loadMore: controller.isLoadMore,
                   ),
                 ],
-                if (controller.viewState.value == ViewState.Error) ...[
+                if (value.viewState == ViewState.Error) ...[
                   SliverListMessageWidget(
-                    title: controller.errorMessage.value,
+                    title: value.errorMessage,
                   ),
                 ],
-                if (controller.viewState.value == ViewState.DataNull) ...[
+                if (value.viewState == ViewState.DataNull) ...[
                   SliverListMessageWidget(
                     title: "Không có dữ liệu",
                   ),

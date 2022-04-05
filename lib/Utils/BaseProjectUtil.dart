@@ -5,7 +5,7 @@ import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Utils/DialogUtil.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:get/get.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:share/share.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -113,8 +113,8 @@ class BaseProjectUtil {
     return timeago.format(dateTime, locale: "vi_short");
   }
 
-  static void askLogin() {
-    DialogUtil.showCompleteDialogQuestion(
+  static void askLogin(BuildContext context) {
+    DialogUtil.showCompleteDialogQuestion(context,
       content: "Tính năng này cần phải đăng nhập\nBạn có muốn đăng nhập ngay không?",
       titleAction: "Đăng nhập",
       onButtonAction: () {

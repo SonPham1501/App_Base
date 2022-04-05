@@ -1,10 +1,8 @@
-import 'package:CenBase/Common/Constant.dart';
 import 'package:CenBase/Utils/BaseResourceUtil.dart';
 import 'package:CenBase/Utils/FontUtil.dart';
 import 'package:CenBase/Widget/LineBaseWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 class BaseAppBarBottomSheetWidget extends StatelessWidget {
   final String? title;
@@ -29,9 +27,7 @@ class BaseAppBarBottomSheetWidget extends StatelessWidget {
                     ),
                   )),
               IconButton(
-                onPressed: () {
-                  Get.back();
-                },
+                onPressed: Navigator.of(context).pop,
                 icon: Padding(
                   padding: const EdgeInsets.all(3),
                   child: SvgPicture.asset(BaseResourceUtil.icon("ic_close_bottomsheet")),
