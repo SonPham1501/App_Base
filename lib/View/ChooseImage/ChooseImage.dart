@@ -7,10 +7,8 @@ import 'package:CenBase/Widget/LineBaseWidget.dart';
 import 'package:FlutterBase/Utils/Util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:get/get.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 
 typedef VoidOnChooseImage = void Function(File image);
 
