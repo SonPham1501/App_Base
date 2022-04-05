@@ -1,5 +1,4 @@
 import 'package:FlutterBase/Utils/ScreenUtil.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'date_picker_theme.dart';
@@ -210,6 +209,19 @@ class _DatePickerComponent extends StatelessWidget {
           onChange: route.onChange,
           onConfirm: route.onConfirm,
           minuteDivider: route.minuteDivider!,
+        );
+        break;
+      default:
+        pickerWidget = DatePickerWidget(
+          minDateTime: route.minDateTime,
+          maxDateTime: route.maxDateTime,
+          initialDateTime: route.initialDateTime,
+          dateFormat: route.dateFormat ?? "",
+          locale: route.locale!,
+          pickerTheme: route.pickerTheme!,
+          onCancel: route.onCancel,
+          onChange: route.onChange,
+          onConfirm: route.onConfirm,
         );
         break;
     }
